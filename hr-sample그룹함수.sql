@@ -11,12 +11,40 @@ select job 직무, max(salary) 최고액, min(salary) 최저액, sum(salary) 총
 from employee
 group by(job);
 
+-- rollup, cube : group by 절에서 사용하는 특수한 키워드.
+select job 직무, max(salary) 최고액, min(salary) 최저액, sum(salary) 총액, round(avg(salary)) 평균급여
+from employee
+group by rollup(job);
+
+select job 직무, max(salary) 최고액, min(salary) 최저액, sum(salary) 총액, round(avg(salary)) 평균급여
+from employee
+group by cube(job)
+order by job;
+
+-- 두 개이상의 컬럼을 그룹핑
+select dno, job, max(salary) 최고액, min(salary) 최저액, sum(salary) 총액, round(avg(salary)) 평균급여
+from employee
+group by dno, job -- 두개이상의 컬럼을 그룹핑 : 두 컬럼이 모두 만족될때 그룹
+
+
+
 -- 3. count(*)함수를 사용하여 담당 업무가 동일한 사원수를 출력하시오.
-select job, count(job)
+select jb from employee;
+
+select distinct job from employee;
+
+
+select job, count(*)
 from employee
 group by job;
 
 -- 4. 관리자 수를 나열 하시오. 컬럼의 별칭은 "관리자수" 로 나열 하시오. 
+select manager from employee;
+
+select count( distinct manager) from employee;  -- count 는 null을 포함하지 않는다.
+
+select distinct manager from employee;
+
 select manager, count(manager) 관리자수
 from employee
 group by manager;
@@ -181,6 +209,17 @@ select e.ename, d.dname, d.loc
 from employee e inner join department d
 on e.dno = d.dno
 order by dname;
+
+-- 제약 조건 : 테이블의 컬럼에 할당되어서 데이터의 무결성을 확보
+    -- Primary Key : 테이블에 한번만 사용할 수 있다. 하나의 컬럼, 두개이상을 그룹핑해서 적용.
+                -- 중복된 값을 넣을 수 없다. NULL을 넣을 수 없다.
+    -- UNQUE : 테이블에 여러 컬럼에 할당 할 수 있다.
+                -- NULL 넣을수 있다. 단 한번만 NULL
+    -- Foreign Key : 다른 테이블의 특정 컬럼의 값을 참조해서만 넣을 수 있다.
+                -- 자신의 컬럼에 임의의 값을 할당하지  못한다.
+    -- NOT NULL : NULL 값을 컬럼에 할당할 수 없다.
+    -- CHECK : 컬럼에 값을 할당 할 때 체크해서 (조건에 만족)
+    -- Default
 
 -- 3. INNER JOIN과 USING 연산자를 사용하여 10번 부서에 속하는 모든 담당 업무의 고유한 목록(한번씩만 표시)을 부서의 지역명을 포함하여 출력 하시오. 
  --나중에 풀기
