@@ -170,7 +170,114 @@ where not(eno in(7499,7566,7839));
 -- 이름이 F로 시작하는 사원의 이름과 사원 번호를 가져온다.
 select ename, eno
 from employee
-where ename like('F%');
+where ename like 'F%';
+
+-- 이름이 s로 끝나는 사원의 이름과 사원 번호를 가져온다.
+select ename, eno
+from employee
+where ename like '%S';
+
+-- 이름에 A가 포함되어 있는 사원의 이름과 사원 번호를 가져온다.
+select ename,  eno
+from employee
+where ename like '%A%';
+
+-- 이름의 두번째 글자가 A인 사원의 사원 이름, 사원 번호를 가져온다.
+select ename, eno
+from employee
+where ename like '_A%';
+
+-- 이름이 4글자인 사원의 사원 이름, 사원 번호를 가져온다.
+select ename, eno
+from employee
+where ename like '____';
+
+
+-- Null
+-- 사원중에 커미션을 받지 않는 사원의 사원번호, 이름, 커미션을 가져온다.
+select eno, ename, commission
+from employee
+where commission is null; 
+
+-- 커미션을 받는 사원의 사원번호, 이름, 커미션 가져온다.
+select eno, ename, commission
+from employee
+where commission is not null;
+
+-- 회사 대표(직속상관이 없는 사람)의 이름과 사원번호를 가져온다.
+select ename,eno
+from employee
+where manager is null;
+
+-- 직속상관이 있는 사람의 이름과 사원번호를 가져온다.
+select ename,eno
+from employee
+where manager is not null;
+
+
+select dno,sum(salary)
+from employee
+group by dno
+having sum(salary) >= 3000;
+
+select ename 사원이름, e.dno 부서번호, job
+from employee e, department d
+where e.dno = d.dno and ename = 'SCOTT';
+
+select ename 사원이름, dname 부서이름, loc 지역명
+from employee e
+natural join department d
+where commission is not null and not(commission = 0);
+
+
+-- 사원의 사원번호, 이름, 급여를 가져온다. 급여를 기준으로 오름차순 정렬을 한다.
+select eno 사원번호, ename 이름, salary 급여
+from employee
+order by salary asc;
+-- 오름차순일때는 asc 생략가능.
+select eno 사원번호, ename 이름, salary 급여
+from employee
+order by salary;
+
+-- 사원의 사원번호, 이름, 급여를 가져온다. 사원번호를 기준으로 내림차순 정렬을 한다.
+select eno 사원번호, ename 이름, salary 급여
+from employee
+order by eno desc;
+
+-- 사원의 사원번호, 이름을 가져온다, 사원의 이름을 기준으로 오름차순 정렬을 한다.
+select eno 사원번호, ename 이름
+from employee
+order by ename asc;
+
+-- 사원의 사원번호, 이름, 입사일을 가져온다. 입사일을 기준으로 내림차순 정렬을 한다.
+select eno 사원번호, ename 이름, hiredate 입사일
+from employee
+order by hiredate desc;
+
+-- 직무가 SALESMAN인 사원의 사원이름, 사원번호, 급여를 가져온다. 급여를 기준으로 오름차순 정렬을 한다.
+select ename 사원이름, eno 사원번호, salary 급여
+from employee
+where job = 'SALESMAN' 
+order by salary asc;
+
+-- 1981년에 입사한 사원들의 사원번호, 사원이름, 입사일을 가져온다. 사원 번호를 기준으로 내림차순 정렬을 한다.
+select eno 사원번호, ename 사원이름, hiredate 입사일
+from employee
+where hiredate between '1981/01/01' and '1981/12/31'
+order by eno desc;
+
+-- 사원의 이름, 급여, 커미션을 가져온다. 커미션을 기준으로 오름차순 정렬을 한다.
+select ename 이름, salary 급여, commission 커미션
+from employee
+order by commission asc;
+
+-- 사원의 이름, 급여, 커미션을 가져온다. 커미션을 기준으로 내림차순 정렬을 한다.
+select ename 이름, salary 급여, commission 커미션
+from employee
+order by commission desc;
+
+
+
 
 
 
