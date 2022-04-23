@@ -276,6 +276,126 @@ select ename 이름, salary 급여, commission 커미션
 from employee
 order by commission desc;
 
+-- 사원의 이름, 사원번호, 급여를 가져온다. 급여를 기준으로 내림차순 정렬, 이름을 기준으로 오름차순 정렬
+select ename 이름, eno 사원번호, salary 급여
+from employee
+order by salary desc, ename asc;
+
+
+-- 숫자함수
+-- 절대값 구하기 abs()
+select -10, abs(-10) from dual;
+
+-- 전직원의 급여를 2000 삭감하고 삭감한 급여액의 절대값을 구한다.
+select ename, salary, abs(salary-2000)
+from employee
+
+-- 소수점 이하 버림 floor()
+select 12.3456, floor(12.3456)
+from dual;
+
+-- 전직원의 급여를 2000 삭감하고 삭감한 급여액의 절대값을 구한다.
+select salary, salary - 2000, abs(salary-2000)
+from employee;
+
+-- 급여가 1500 이상인 사원의 급여를 15% 삭감한다. 단 소수점 이하는 버린다.
+select salary, salary * 0.85, floor(salary * 0.85)
+from employee
+where salary >= 1500;
+
+-- 급여가 2천 이하인 사원들의 급여를 20%씩 인상한다. 단 10의 자리를 기준으로 반올림한다.
+select 12.3456, round(12.3456) from dual;
+select 12.8888, round(12.8888) from dual;
+select 12.8888, round(12.8888,2) from dual;
+select 88.8888, round(88.8888,-2) from dual;
+
+-- 급여가 2천 이하인 사원들의 급여를 20%씩 인상한다. 단 10의 자리를 기준으로 반올림한다.
+select salary, salary * 1.2, round(salary * 1.2,2)
+from employee
+where salary <= 2000;
+
+-- 버림. 자리수를 정할 수 있다.
+select 1112.3456, trunc(1112.23456,2) from dual;
+
+-- 전 직원의 급여를 10의자리 이하를 삭감한다.
+select salary, trunc(salary,-2)
+from employee;
+
+-- 나머지 구하기
+select mod(10,3), mod(10,4)
+from dual;
+
+-- 문자열 함수
+-- 대문자 -> 소문자
+select 'ABcdEF', lower('ABcdEF') from dual;
+
+-- 사원들의 이름을 소문자로 가져온다.
+select ename lower(ename)
+from employee;
+
+-- 소문자 --> 대문자
+select 'ABcdEF', upper('ABcdEF') from dual;
+
+-- 사원들의 이름을 가져온다. 대문자 -> 소문자 -> 대문자
+select ename, lower(ename), upper(lower(ename))
+from employee;
+
+-- 첫 글자만 대문자로, 나머지는 소문자로
+select 'aBCDEF', initcap('aBCDEF') from dual;
+
+-- 사원이름을 첫 글자는 대문자로 나머지는 소문자로 가져온다.
+select ename, initcap(ename)
+from employee;
+
+-- 문자열 연결
+select concat('abc','def')
+from dual;
+
+-- 사원들의 이름과 직무를 다음과 같이 가져온다.
+-- 사원의 이름은 000 이고, 직무는 000입니다.
+select concat(concat(concat(concat('사원의 이름은 ', ename),' 이고, 직무는 '),job),'입니다')
+from employee;
+
+select '사원들의 이름은 ' || ename || '이고, 직무는 ' || job || '입니다'
+from employee;
+
+-- 문자열의 길이
+select length('abcd'), lengthb('abcd'),length('안녕하세요'),lengthb('안녕하세요')
+from dual;
+
+-- 문자열 잘라내기
+select substr('abcd',3), substrb('abcd',3),substr('안녕하세요',3),substrb('안녕하세요',3)
+from dual;
+
+select substr('abcdefghi',3,4), substr('동해물과 백두산이',3,4)
+from dual;
+
+--문자열 찾기
+select instr('abcdabcdabcd','bc'), instr('abcdabcdabcd','bc',3),
+       instr('abcdabcdabcd', 'bc',3,2)
+from dual;
+
+select instr('abcdefg','aaa') form dual;
+
+-- 사원의 이름 중에 A라는 글자가 두번째 이후에 나타나는 사원의 이름을 가져온다.
+select ename
+from employee
+where instr(ename,'A') > 1;
+
+-- 특정 문자열로 채우기
+select '문자열', lpad('문자열',20,'*') from dual;
+select '문자열', rpad('문자열',20,'*') from dual;
+
+-- 공백제거
+select '    문자열    ', ltrim('    문자열    '), rtrim('    문자열    ') from dual;
+
+-- 문자열 변경
+select 'abcdefg', replace('abcdefg','abc','kkkkkk') from dual;
+
+
+
+
+
 
 
 
