@@ -615,24 +615,84 @@ having avg(salary) >= 2000;
 select dno, sum(salary)
 from employee
 group by dno
-having max(salary) < 3000;
+having max(salary) <= 3000;
 
 -- 부서별 최소 급여액이 1000 이하인 부서에서 직무가 CLERK인 사원들의 급여 총합을 구한다.
 select dno,job,sum(salary)
 from employee
 where job = 'CLERK'
 group by dno,job
-having min(salary) >= 1000;
+having min(salary) <= 1000;
+
+-- 각 부서의 급여 최소가 900이상 최대가 10000이하 부서의 사원 중 1500이상의 
+-- 급여를 받는 사원들의 평균 급액을 가져온다.
+select ename,dno,trunc(avg(salary))
+from employee
+where salary >= 1500
+group by ename,dno
+having min(salary) >= 900 and max(salary) <= 10000;
 
 
+-- Join(조인)
+-- 사원테이블(employee)과 부서테이블(department)을 join 한다.
+select * from employee;  --14
+select * from department;  --8
+
+select * 
+from employee e,department d
+where e.dno = d.dno; 
+;  --56
 
 
+-- 사원의 사원번호, 이름, 근무부서 이름을 가져온다.
+select e.eno, e.ename, d.dname
+from employee e, department d
+where e.dno = d.dno;
+
+-- 사원의 사원번호, 이름, 근무지역을 가져온다.
+select e.eno, e.ename, d.loc
+from employee e, department d
+where e.dno = d.dno;
+
+-- DALLAS에 근무하고 있는 사원들 사원번호, 이름, 직무를 가져온다.
+select e.eno, e.ename, e.job, d.loc
+from employee e, department d
+where e.dno = d.dno and d.loc = 'DALLAS';
 
 
+-- SALES 부서에 근무하고있는 사원들의 급여 평균을 가져온다.
+select trunc(avg(salary))
+from employee e, department d
+where e.dno = d.dno and d.dname = 'SALES'
 
+-- 1982에 입사한 사원들의 사원번호, 이름, 입사일, 근무부서 이름을 가져온다.
+select e.eno, e.ename, e.hiredate, d.dname
+from employee e, department d
+where e.dno = d.dno and e.hiredate between '1982/01/01' and '1982/12/31'
 
+-- 각 사원들의 사원번호, 이름, 급여, 급여등급을 가져온다.
+select * from salgrade;
+select * from employee;
 
+select e.eno, e.ename, e.salary, s.grade
+from employee e, salgrade s
+where e.salary between s.losal and s.hisal;
 
+-- SALES 부에 근무하고 있는 사원 사원번호, 이름, 급여등급을 가져온다.
+select e.eno, e.ename, s.grade
+from employee e, salgrade s, department d
+where e.dno = d.dno and e.salary between s.losal and s.hisal and d.dname = 'SALES'
+
+-- 각 급 등급별 급여의 총합 평균, 사원의수, 최대급여, 최소급여를 가져온다.
+select sum(e.salary), trunc(avg(e.salary)), count(e.salary), max(e.salary), min(e.salary)
+from employee e, salgrade s
+where e.salary between s.losal and s.hisal
+group by s.grade;
+
+-- 급여 등급이 4등급인 사원들의 사원번호, 이름, 급여, 근무부서이름, 근무지역을 가져온다.
+select e.eno , e.salary, d.dname, d.loc
+from employee e, salgrade s, department d
+where e.dno = d.dno and e.salary between s.losal and s.hisal and s.grade = 4
 
 
 
