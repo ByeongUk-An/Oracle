@@ -696,6 +696,212 @@ where e.dno = d.dno and e.salary between s.losal and s.hisal and s.grade = 4
 
 
 
+-- SELF JOIN
+-- SMITH 사원의 사원번호, 이름, 직속상관 이름을 가져온다.
+select * from employee;
+-- a1 : SMITH 사원의 정보
+-- a2 : 직속상관의 정보
+select a1.eno, a1.ename, a2.ename
+from employee a1, employee a2
+where a1.manager = a2.eno and a1.ename = 'SMITH';
+-- FORD 사원 밑에서 일하는 사원들의 사원번호, 이름, 직무를 가져온다.
+-- a1 : FORD의 정보
+-- a2 : 부하 직원의 정보
+select a2.eno, a2.ename, a2.job
+from employee a1, employee a2
+where a1.eno = a2.manager and a1.ename = 'FORD'
+
+-- SMITH 사원의 직속상관과 동일한 직무를 가지고 있는 사원들의 사원번호, 이름, 직무를 가져온다.
+-- a1 : SMITH
+-- a2 : SMITH의 직속상관 정보
+-- a3 : 직속상관의 동일한 직무를 가지고 있는 사원들의 정보
+select a3.eno, a3.ename, a3.job
+from employee a1, employee a2, employee a3
+where a1.manager = a2.eno and a2.job = a3.job and a1.ename = 'SMITH';
+
+
+-- OUTER JOIN
+-- 각 사원의 이름, 사원번호, 직장상사 이름을 가져온다. 단 직속상관이 없는 사원도 가져온다.
+-- a1 : 각 사원의 정보
+-- a2 : 직장 상사의 정보
+select a1.ename, a1.eno, a2.ename
+from employee a1, employee a2
+where a1.manager = a2.eno(+);
+
+-- 모든 부서의 소속 사원의 근무부서명, 사원번호, 사원이름, 급여를 가져온다.
+-- a1 :  사원부서 
+-- a2 : 부서정보
+
+select a2.dname, a1.eno, a1.ename, a1.salary
+from employee a1, department a2
+where a1.dno(+) = a2.dno;
+
+select distinct dno from employee;
+select * from employee;
+
+
+-- 서브쿼리
+-- SCOTT 사원이 근무하고 있는 부서의 이름을 가져온다.
+select dname
+from department
+where dno = (select dno
+             from employee
+             where ename = 'SCOTT');
+
+-- SMITH와 같은 부서에 근무하고 있는 사원들의 사원번호, 이름, 급여액, 부서이름을 가져온다.
+select e.eno, e.ename, e.salary, d.dname
+from employee e , department d
+where e.dno = d.dno and e.dno = (select dno
+                                  from employee
+                                  where ename = 'SMITH');
+
+-- MARTIN과 같은 직무를 가지고 있는 사원들의 사원번호, 이름, 직무를 가져온다.
+select eno, ename, job
+from employee
+where job = (
+             select job
+             from employee
+             where ename = 'MARTIN');
+
+-- ALLEN과 같은 직속상관을 가진 사원들의 사원번호, 이름, 직속상관이름을 가져온다.
+-- a1 : 사원의 정보
+-- a2 : 직속상관 정보
+select a1.eno, a1.ename, a2.ename
+from  employee a1, employee a2
+where a1.manager = a2.eno and a1.manager(select manager
+                                         from employee
+                                         where ename='ALLEN');
+                                         
+-- WARD와 같은 부서에 근무하고 있는 사원들의 사원번호, 이름, 부서번호를 가져온다.
+select eno, ename, dno
+from employee
+where dno = (select dno
+             from employee
+             where ename = 'WARD');
+
+-- SALESMAN의 평균 급여보다 많이 받는 사원들의 사원번호, 이름, 급여를 가져온다.
+select eno, ename, salary
+from employee
+where salary > (select avg(salary) 
+                     from employee
+                     where job = 'SALESMAN');
+
+-- DALLAS 지역에 근무하는 사원들의 평균 급여를 가져온다.
+select trunc(avg(salary))
+from employee
+where dno = (select dno
+             from department
+             where loc = 'DALLAS');
+
+-- SALES 부서에 근무하는 사원들의 사원번호, 이름, 근무지역을 가져온다.
+select e.eno, e.ename, d.loc
+from employee e, department d
+where e.dno = d.dno and e.dno = (select dno
+               from department
+               where dname = 'SALES');
+
+-- CHICAGO 지역에 근무하는 사원들 중 BLAKE이 직속상관인 사원들의 사원번호, 이름, 직무를 가져온다.
+-- a1 : 사원들의 정보 
+-- a2 : BLAKE 의 manager 번호 
+-- a3 : 
+select eno, ename, job
+from employee
+where dno = (select dno
+             from department
+             where loc = 'CHICAGO') 
+      and manager = (select eno
+      from employee
+      where ename = 'BLAKE');
+
+-- 결과가 하나이상인 서브쿼리
+-- 3000 이상의 급여를 받는 사원들과 같은 부서에 근무하고 있는 사원의 사원번호, 이름, 급여를 가져온다.
+select eno, ename, salary
+from employee
+where dno in (select dno
+             from employee
+             where salary >= 3000);
+
+-- 직무가 CLERK인 사원과 동일한 부서에 근무하고 있는 사원들의 사원번호, 이름, 입사일 가져온다.
+select eno, ename, hiredate
+from employee
+where dno in (select dno
+             from employee
+             where job = 'CLERK');
+
+-- KING을 직속상관으로 가지고 있는 사원들이 근무하고 있는 근무 부서명, 지역을 가지고온다.
+select dname,loc
+from department 
+where dno in (select dno
+            from employee
+            where manager = (select eno
+                            from employee
+                            where ename = 'KING'));
+
+-- CLERK의 직속상관의 사원번호, 이름, 급여를 가져온다.
+select eno, ename, salary
+from employee
+where eno in (select manager
+            from employee
+            where job = 'CLERK');
+
+-- 각 부서별 급여 평균보다 더 많이 받는 사원의 사원번호, 이름, 급여를 가져온다.
+select eno, ename, salary
+from employee
+where salary > all (select avg(salary)
+                from employee
+                group by dno);
+
+
+select eno, ename, salary
+from employee
+where salary > (select max(avg(salary))
+                from employee
+                group by dno);
+
+-- 각 부서별 급여 최저치보다 더 많이 받는 사원들의 사원번호, 이름, 급여를 가져온다.
+select eno, ename, salary
+from employee
+where salary > all (select min(salary)
+                    from employee
+                    group by dno;);
+
+select eno, ename, salary
+from employee
+where salary > (select max(min(salary))
+                    from employee
+                    group by dno);
+
+-- SALESMAN 보다 급여를 적게 받는 사원들의 사원번호, 이름, 급여를 가져온다.
+select eno, ename, salary
+from employee
+where salary < all (select salary
+                from employee
+                where job = 'SALESMAN');
+
+select eno, ename, salary
+from employee
+where salary < (select min(salary)
+                from employee
+                where job = 'SALESMAN');
+
+-- 각 부서별 최저 급여 액수보다 많이 받는 사원들이 사원번호, 이름, 급여를 가져온다.
+select eno, ename, salary
+from employee
+where salary > any (select min(salary)
+                from employee
+                group by dno);
+
+-- DALLAS에 근무하고 있는 사원들 중 가장 나중에 입사한 사원의 입사 날짜보다 더 먼저 입사한 사원들의 사원번호, 이름, 입사일을 가져온다.
+select eno, ename, hiredate
+from employee 
+where hiredate < any (select hiredate
+                  from employee
+                  where dno = (select dno
+                  from department
+                  where loc = 'DALLAS'));
+
+
+
 
 
 
