@@ -604,8 +604,25 @@ where salary >= 1500
 group by dno;
 
 
+-- Having
+-- 부서별 평균 급여가 2000이상 부서의 급여 평균을 가져온다.
+select dno,avg(salary)
+from employee
+group by dno
+having avg(salary) >= 2000;
 
+-- 부서별 최대 급여액이 3000이하인 부의 급여 총합을 가져온다.
+select dno, sum(salary)
+from employee
+group by dno
+having max(salary) < 3000;
 
+-- 부서별 최소 급여액이 1000 이하인 부서에서 직무가 CLERK인 사원들의 급여 총합을 구한다.
+select dno,job,sum(salary)
+from employee
+where job = 'CLERK'
+group by dno,job
+having min(salary) >= 1000;
 
 
 
