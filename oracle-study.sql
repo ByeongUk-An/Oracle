@@ -901,12 +901,54 @@ where hiredate < any (select hiredate
                   where loc = 'DALLAS'));
 
 
+-- SET
+-- 10번 부서에 근무하고 있는 사원의 사원번호, 이름, 직무, 근무부서 번호를 가져온다.
+select eno, ename, job, dno
+from employee
+where dno = 10;
+
+-- 직무가 CLERK인 사원의 사원번호, 이름, 직무, 근무부서 번호를 가져온다.
+select eno, ename, job, dno
+from employee
+where job = 'CLERK'
+
+-- UNION
+select eno, ename, job, dno
+from employee
+where dno = 10
+union
+select eno, ename, job, dno
+from employee
+where job = 'CLERK';
 
 
+-- UNION ALL
+select eno, ename, job, dno
+from employee
+where dno = 10
+union all
+select eno, ename, job, dno
+from employee
+where job = 'CLERK';
 
 
+-- INTERSECT
+select eno, ename, job, dno
+from employee
+where dno = 10
+intersect
+select eno, ename, job, dno
+from employee
+where job = 'CLERK';
 
-
+-- MINUS 위에있는 코드에 있는 집합을 밑에있는 집합을 뺴고 남은 결과값을 도출
+select eno, ename, job, dno
+from employee
+where dno = 10
+minus
+select eno, ename, job, dno
+from employee
+where job = 'CLERK';
 
 
 
