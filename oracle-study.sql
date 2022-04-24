@@ -479,23 +479,129 @@ select to_date('2018-03-20 01;58:20 오후', 'YYYY-MM-DD HH:MI:SS AM') from dual
 select hiredate, to_char(hiredate,'YYYY-MM-DD') from employee;
 
 
+--DECODE
+-- 각 사원의 부서이름을 가져온다.
+-- 10 : 인사부 20: 개발부 30: 경영지원팀 40: 생산부
+select eno, ename, 
+       decode(dno, 10, '인사부',
+                   20, '개발부',
+                   30, '경영지원팀',
+                   40, '생산부')
+from employee;
+
+-- 직급에 따라 인상된 급여액을 가져온다.
+-- CLERK : 10% SALESMAN : 15% PRESIDENT : 200% MANAGER : 5% ANAYST : 20%
+select eno, ename, job,
+       decode(job, 'CLERK', salary * 1.1,
+                   'SALESMAN', salary * 1.15,
+                   'PRESIDENT', salary * 3,
+                   'MANAGER', salary * 1.05,
+                   'ANALYST' , salary * 1.2)
+from employee;
 
 
+-- CASE WHEN THEN
+-- 급여액 별 등급을 가져온다.
+-- 1000미만 : C등급, 1000이상 2000미만 : B등급, 2000이상 : A등급
+select eno,ename,salary,
+                      case when salary < 1000 then 'C등급'
+                      when salary >= 1000 and salary < 2000 then 'B등급'
+                      when salary >= 2000 then 'A등급'
+                      end
+from employee;
+
+-- 직원들의 급여를 다음과 값이 인상한다.
+-- 1000 이하 : 100%, 1000초과 2000미만 : 50%, 2000이상 : 200%
+select eno,ename,salary,
+       case when salary <= 1000 then salary * 2
+            when salary > 1000 and salary <= 2000 then salary * 0.5
+            when salary >= 2000 then salary * 3
+       end
+from employee;
+
+-- 그룹함수
+-- 사원들의 급여 총합을 구한다.
+select sum(salary)
+from employee;
+
+-- 사원들의 커미션을 가져온다. null값이 포함된경우 제외하고 실행된다.
+select sum(commission)
+from employee;
+
+-- 급여가 1500이상인 사원들의 급여 총합을 구한다.
+select sum(salary)
+from employee
+where salary >= 1500;
+
+-- 20번 부서에 근무하고 있는 사원들의 급여 총합을 구한다.
+select sum(salary)
+from employee
+where dno = 20;
+
+-- 직무가 SALESMAN인 사원들의 급여 총합을 구한다.
+select sum(salary)
+from employee
+where job ='SALESMAN';
+
+-- 전 사원의 평균 급여를 구한다.
+select trunc(avg(salary))
+from employee;
+
+-- 커미션을 받는 사원들의 커미션 평균을 구한다.
+select trunc(avg(commission))
+from employee;
 
 
+-- 전 사원의 커미션의 평균을 구한다.
+select trunc(avg(nvl(commission,0)))
+from employee;
+
+-- 커미션을 받는 사원들의 평균을 구한다.
+select trunc(avg(commission)) 
+from employee
+where commission is not null;
+
+-- 30번 부서에 근무하고 있는 사원들의 급여 평균을 구한다.
+select trunc(avg(salary))
+from employee
+where dno = 30;
+
+-- 직무가 SALESMAN인 사원들의 급여 + 커미션 평균을 구한다.
+select trunc(avg(salary+commission))
+from employee
+where job = 'SALESMAN'
+
+-- 사원들의 총 수를 구한다.
+select count(eno)
+from employee;
+
+-- 커미션을 받는 사원들의 총 수를 가져온다.
+select count(commission)
+from employee
+where commission is not null;
 
 
+-- 사원들의 급여 최대, 최소값을 가져온다.
+select max(salary), min(salary)
+from employee;
 
 
+-- Group by
+-- 각 부서별 사원들의 급여 평균을 구한다.
+select dno, trunc(avg(salary))
+from employee
+group by dno;
 
+-- 각 직무별 사원들의 급여 총합을 구한다.
+select job, sum(salary)
+from employee
+group by job;
 
-
-
-
-
-
-
-
+-- 1500이상 급여를 받는 사원들의 부서별 급여 평균을 구한다.
+select dno, trunc(avg(salary))
+from employee
+where salary >= 1500
+group by dno;
 
 
 
