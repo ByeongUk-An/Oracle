@@ -140,15 +140,52 @@ rename dept20 to dept30;
 
 desc dept30;
 
+/* 테이블 삭제 */
+drop table dept30;
 
 
+/*
+    DDL : Create (생성), Alter (수정), Drop (삭제)
+        테이블, 뷰, 인덱스, 트리거, 시퀀스, 함수, 저장프로시저
+*/
 
+/*
+    DML : Insert (레코드 추가), Update (레코드 수정), Delete (레코드 삭제)
+        << 테이블의 값 (레코드, 로우) >>
+*/
 
+/*
+    DQL : Select
+*/
 
+/*
+    테이블의 전체 내용이나 테이블 삭제시
+    1. delete : 테이블의 레코드를 삭제, where 조건 없이 사용하면 모든 레코드를 삭제  <<포멧>>
+    2. truncate : 테이블의 레코드를 삭제, 속도가 굉장히 빠르다. <<빠른포멧>>
+    3. drop : 테이블 자체를 삭제
+*/
 
+create table emp10
+as
+select * from employee;
 
+select * from emp10;
 
+-- emp10 : delete를 사용해서 삭제.
+delete emp10;
+commit;
 
+select * from emp10;
+
+-- emp20 : truncate를 사용해서 삭제.
+truncate table emp20;
+
+select * from emp20;
+
+-- emp30 : drop을 사용해서 삭제.
+drop table emp30;
+
+select * from emp30;
 
 
 
