@@ -91,19 +91,54 @@ desc dept20;
 alter table dept20
 modify dname varchar2(50);
 
+desc dept20;
+alter table dept20
+modify dno number(4);
+
+desc dept20;
+alter table dept20
+modify address Nvarchar2(200);
+
+-- 특정 컬럼 삭제 : 업무시간 외에 작업. (부하가 많이 걸릴수 있다.)
+desc dept20;
+alter table dept20
+drop column birth;
+
+select * from dept20;
+
+desc dept20;
+alter table dept20
+drop column email;
+
+select * from dept20;
 
 
+-- 컬럼을 삭제시에 부하가 많이 발생이 됨.
+    -- SET UNUSED : 특정 컬럼을 사용 중지 (업무중), 야간에 삭제.
+
+select * from dept20;
+desc dept20;    
+
+alter table dept20  -- 업무중일때 특정 컬럼을 사용중지
+set unused (address);
+
+alter table dept20  -- 야간에 사용 중지된 컬럼을 삭
+drop unused column; -- 사용하지 않는 컬럼을 삭제 함.
 
 
+/* 컬럼 이름 변경 */
+desc dept20;    
 
+alter table dept20
+rename column LOC to LOCATIONS;
 
+alter table dept20
+rename column dno to D_Number;
 
+/* 테이블 이름 변경 */
+rename dept20 to dept30;
 
-
-
-
-
-
+desc dept30;
 
 
 
