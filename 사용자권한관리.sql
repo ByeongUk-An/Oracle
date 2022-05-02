@@ -8,4 +8,6 @@
         - Object Privileges : 테이블, 뷰, 트리거, 함수, 저장프로시저, 시퀀스, 인덱스) 접근 권한.
 */
 
-
+-- Oracle 에서 계정 생성. (일반 계정에서는 계정을 생성할 수 있는 권한이 없다.
+show user;
+create user usertest01 identified by 1234;

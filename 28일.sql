@@ -180,7 +180,7 @@ on emp_copy90(ename);
 drop index id_emp_ename;
 
 /*
-    index는 주기적으로 REBUILD 해 줘야 한다. , 
+    index는 주기적으로 REBUILD 해 줘야 한다. , (1주일,1달)
         -Index page는 조각난다 (Insert, update, delete) 빈번하게 일어나면 성능저하가 된다.
 */
 
@@ -197,7 +197,88 @@ WHERE   I.BLEVEL > 4
 ORDER BY I.BLEVEL DESC;
 
 -- index rebuild : 
-alter index
+alter index id_emp_ename rebuild;  -- index 를 새롭게 생성한다.
+
+select * from emp_copy90;
+
+/*
+    Index 를 사용해야 하는 경우 
+        1. 테이블의 행(로우,레코드)의 갯수가 많은 경우 
+        2. where절에서 자주 사용되는 컬럼.
+        3. Join 시 사용되는 키 컬럼.
+        4. 검색 결과가 원본 테이블 데이터의 2% ~ 4% 정도 되는경우
+        5. 해당 컬럼이 null 이 포함하는 경우 (색인은 null은 제외)
+        
+    Index 를 사용하면 안좋은 경우
+        1. 테이블의 행의 갯수가 적은경우
+        2. 검색 결과가 원본 테이블의 많은 비중을 차지 하는 경우
+        3. Insert,Update,Delete 가 빈번하게 일어나는 컬럼.
+        
+*/
+
+
+/*
+    index 종류
+        1. 고유 인덱스 (Unique Index) : 컬럼의 중복되지 않는 고유한 값을 갖는 Index(Primary Key, Unique)
+        2. 단일 인덱스 (Single Index) : 한 컬럼에 부여 되는 Index
+        3. 결합 인덱스 (Composite Index) : 여러 컬럼을 묶어서 생성한 Index
+        4. 함수 인덱스 (Function Index) : 함수를 적용한 컬럼에 생성한 Index
+*/
+
+select * from emp_copy90;
+
+-- 단일 인덱스 생성 : 한 컬럼에 부여 되는 Index한 컬럼에 부여 되는 Index
+create index idx_emp_copy90_salary
+on emp_copy90 (salary);
+
+-- 결합 인덱스 : 여러 컬럼을 묶어서 생성한 Index여러 컬럼을 묶어서 생성한 Index
+create table dept_copy91
+as
+select * from department;
+
+create index idx_dept_copy91_dname_loc
+on dept_copy91 (dname, loc);
+
+
+
+select index_name, table_name, column_name
+from user_ind_columns
+where table_name in ('DEPT_COPY91');
+
+-- 함수 기반 인덱스 : 함수를 적용한 컬럼에 생성한 Index함수를 적용한 컬럼에 생성한 Index
+create table emp_copy91
+as
+select * from employee;
+
+create index idx_emp_copy91_allsal
+on emp_copy91 (salary * 12);        -- 컬럼에 함수, 계산식을 적용한 인덱스.
+
+/* 인덱스 삭제 */
+select index_name, table_name, column_name
+from user_ind_columns
+where table_name in ('DEPT_COPY91');
+
+drop index idx_emp_copy91_allsal;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
