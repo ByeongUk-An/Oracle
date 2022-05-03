@@ -334,6 +334,10 @@ variable var_salary number;
 exec :var_salary := fn_salary_ename('SCOTT');
 print var_salary;
 
+-- 2. 함수사용 (SQL 구문 내에서 함수 사용)
+select ename, fn_salary_ename('SCOTT') as 월급
+from employee
+where ename = 'SCOTT';
 
 
 
